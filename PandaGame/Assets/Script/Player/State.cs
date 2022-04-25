@@ -7,7 +7,7 @@ public class State : MonoBehaviour
     // Start is called before the first frame update
     public enum StatePlayer { Idle, Move, Jump, Attack, Die};
     public float velocity;
-    
+    public bool isProcessing;
     public StatePlayer state { get; set; }
 
 

@@ -10,7 +10,7 @@ public class JumpingBetweenTrees : MonoBehaviour
     private List<GameObject> listPositionToJump;
     private KeyCode keyPress;
     private int indexIsStay;
-
+    private Vector3 target;
     void Start()
     {
         GameObject[] positionToJump = GameObject.FindGameObjectsWithTag("Respawn");
@@ -27,6 +27,7 @@ public class JumpingBetweenTrees : MonoBehaviour
         indexIsStay = listPositionToJump.Count / 2;
         transform.position = new Vector3(listPositionToJump[indexIsStay].transform.position.x, 0 ,
             transform.position.z);
+        target = transform.position;
         HandleSideStay();
        // Debug.Log("Vi tri dang dung:" + indexIsStay);
     }
@@ -34,13 +35,20 @@ public class JumpingBetweenTrees : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.position = Vector3.MoveTowards(transform.position, new Vector3(target.x, transform.position.y, transform.position.z), 0.02f);
+        if(transform.position.x != target.x)
+        {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.D))
         {
             
-            if(indexIsStay + 1 < listPositionToJump.Count)
+            if (indexIsStay + 1 < listPositionToJump.Count)
             {
                 transform.localScale = new Vector3(transform.localScale.x * (-1), transform.localScale.y, transform.localScale.z);
-                transform.position = new Vector3(listPositionToJump[++indexIsStay].transform.position.x , transform.position.y , transform.position.z);
+                //transform.position = new Vector3(listPositionToJump[++indexIsStay].transform.position.x , transform.position.y , transform.position.z);
+                target = new Vector3(listPositionToJump[++indexIsStay].transform.position.x, transform.position.y, transform.position.z);
+                
                 HandleSideStay();
             }
             
@@ -53,7 +61,8 @@ public class JumpingBetweenTrees : MonoBehaviour
             if (indexIsStay - 1 >= 0)
             {
                 transform.localScale = new Vector3(transform.localScale.x * (-1), transform.localScale.y, transform.localScale.z);
-                transform.position = new Vector3(listPositionToJump[--indexIsStay].transform.position.x, transform.position.y, transform.position.z);
+                target = new Vector3(listPositionToJump[--indexIsStay].transform.position.x, transform.position.y, transform.position.z);
+                //transform.position = new Vector3(listPositionToJump[--indexIsStay].transform.position.x, transform.position.y, transform.position.z);
                 HandleSideStay();
             }
            

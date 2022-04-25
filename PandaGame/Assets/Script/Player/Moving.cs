@@ -22,7 +22,7 @@ public class Moving : MonoBehaviour
     
     void Update()
     {
-       
+        
         if (Input.anyKey)
         {
             if (Input.GetKey(KeyCode.W))
@@ -31,7 +31,7 @@ public class Moving : MonoBehaviour
                 transform.Translate(Vector3.up * Time.deltaTime * statePlayer.velocity);
                 statePlayer.state = State.StatePlayer.Move;
                 //MoveUp();
-              
+                
             }
 
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.Space))
@@ -48,6 +48,10 @@ public class Moving : MonoBehaviour
             if (Input.GetKey(KeyCode.K))
             {
                 Attack();
+            }
+            if(Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.Space))
+            {
+                statePlayer.state = State.StatePlayer.Idle;
             }
         }
         else if (Input.touchCount >=1)
