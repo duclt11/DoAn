@@ -5,64 +5,74 @@ using UnityEngine;
 public class JumpingBetweenTrees : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField]
-    //private State statePlayer;
+    
+    public State statePlayer;
     private List<GameObject> listPositionToJump;
-    private KeyCode keyPress;
+    //private KeyCode keyPress;
     private int indexIsStay;
     private Vector3 target;
+
+    private bool spawned = false;
+    private float decay;
+
     void Start()
     {
+        listPositionToJump = new List<GameObject>();
         GameObject[] positionToJump = GameObject.FindGameObjectsWithTag("Respawn");
         foreach(var item in positionToJump)
         {
             listPositionToJump.Add(item);
         }
+        Debug.Log("Size:" + listPositionToJump.Count);
         listPositionToJump.Sort((IComparer<GameObject>)new sort());
 
-        for(int i=0; i<listPositionToJump.Count; i++)
-        {
-            //Debug.Log("Toa do x:"+ i +" " + listPositionToJump[i].transform.position.x);
-        }
+        
         indexIsStay = listPositionToJump.Count / 2;
         transform.position = new Vector3(listPositionToJump[indexIsStay].transform.position.x, 0 ,
             transform.position.z);
         target = transform.position;
         HandleSideStay();
-       // Debug.Log("Vi tri dang dung:" + indexIsStay);
+       
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, new Vector3(target.x, transform.position.y, transform.position.z), 0.02f);
+        transform.position = Vector3.MoveTowards(transform.position, new Vector3(target.x, transform.position.y, transform.position.z), statePlayer.velocity * Time.deltaTime*3);
+
         if(transform.position.x != target.x)
         {
+            statePlayer.isProcessing = true;
             return;
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        else
+        {
+            statePlayer.isProcessing = false;
+            
+        }
+        Reset();
+        if (Input.GetKeyDown(KeyCode.D) && !spawned)
         {
             
             if (indexIsStay + 1 < listPositionToJump.Count)
             {
-                transform.localScale = new Vector3(transform.localScale.x * (-1), transform.localScale.y, transform.localScale.z);
-                //transform.position = new Vector3(listPositionToJump[++indexIsStay].transform.position.x , transform.position.y , transform.position.z);
+                decay = 1f;
                 target = new Vector3(listPositionToJump[++indexIsStay].transform.position.x, transform.position.y, transform.position.z);
-                
+                statePlayer.state = State.StatePlayer.Idle;
                 HandleSideStay();
             }
-            
+                
         }
 
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) && !spawned)
         {
-            
+            decay = 1f;
             if (indexIsStay - 1 >= 0)
             {
-                transform.localScale = new Vector3(transform.localScale.x * (-1), transform.localScale.y, transform.localScale.z);
+                
                 target = new Vector3(listPositionToJump[--indexIsStay].transform.position.x, transform.position.y, transform.position.z);
-                //transform.position = new Vector3(listPositionToJump[--indexIsStay].transform.position.x, transform.position.y, transform.position.z);
+                statePlayer.state = State.StatePlayer.Idle;
                 HandleSideStay();
             }
            
@@ -104,6 +114,18 @@ public class JumpingBetweenTrees : MonoBehaviour
             {
                 transform.localScale = new Vector3(temp, transform.localScale.y, transform.localScale.z);
             }
+        }
+    }
+    private void Reset()
+    {
+        if (spawned && decay > 0)
+        {
+            decay -= Time.deltaTime;
+        }
+        if (decay < 0)
+        {
+            decay = 0;
+            spawned = false;
         }
     }
 }

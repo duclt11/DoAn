@@ -22,67 +22,75 @@ public class Moving : MonoBehaviour
     
     void Update()
     {
-        
-        if (Input.anyKey)
+        if (!statePlayer.isProcessing)
         {
-            if (Input.GetKey(KeyCode.W))
+            if (Input.anyKey)
             {
-                //rigid.velocity = new Vector2(Time.deltaTime * statePlayer.velocity, transform.position.y);
-                transform.Translate(Vector3.up * Time.deltaTime * statePlayer.velocity);
-                statePlayer.state = State.StatePlayer.Move;
-                //MoveUp();
-                
-            }
+                if(statePlayer.state != State.StatePlayer.Attack)
+                {
+                    if (Input.GetKey(KeyCode.W))
+                    {
+                        //rigid.velocity = new Vector2(Time.deltaTime * statePlayer.velocity, transform.position.y);
+                        transform.Translate(Vector3.up * Time.deltaTime * statePlayer.velocity);
+                        statePlayer.state = State.StatePlayer.Move;
+                        //MoveUp();
 
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.Space))
+                    }
+
+                }
+
+                if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.K))
+                {
+                    //transform.Translate(Vector3.down * Time.deltaTime * statePlayer.velocity);
+                    //animator.SetBool("IsMoving", true);
+                    //MoveUp(false);
+                    Attack();
+                    //this.transform.Translate(Vector3.down * Time.deltaTime * statePlayer.velocity * 2);
+                    statePlayer.state = State.StatePlayer.Attack;
+
+                }
+
+
+                //if (Input.GetKey(KeyCode.K))
+                //{
+                //    Attack();
+                //}
+                if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.Space))
+                {
+                    statePlayer.state = State.StatePlayer.Idle;
+                }
+            }
+            else if (Input.touchCount >= 1)
             {
-                //transform.Translate(Vector3.down * Time.deltaTime * statePlayer.velocity);
-                //animator.SetBool("IsMoving", true);
-                //MoveUp(false);
-                this.transform.Translate(Vector3.down * Time.deltaTime * statePlayer.velocity * 2);
-                statePlayer.state = State.StatePlayer.Attack;
+                if (joystick.joystickVec.y != 0)
+                {
+                    transform.Translate(Vector3.up * Time.deltaTime * statePlayer.velocity);
+
+                }
+                Debug.Log("Process");
+                if (joystick.joystickVec.x > -0.5f && joystick.joystickVec.x < 0.5f && joystick.joystickVec.y > 0 && joystick.joystickVec.y <= 1)
+                {
+                    transform.Translate(Vector3.up * Time.deltaTime * statePlayer.velocity);
+
+                    //MoveUp();
+                }
+                if (joystick.joystickVec.x > -0.5f && joystick.joystickVec.x < 0.5f && joystick.joystickVec.y >= -1 && joystick.joystickVec.y < 0)
+                {
+                    transform.Translate(Vector3.down * Time.deltaTime * statePlayer.velocity);
+
+                    //MoveUp(false);
+                }
+                Debug.Log("Joystick X:" + joystick.joystickVec.x + " y: " + joystick.joystickVec.y);
+
+
 
             }
-
-
-            if (Input.GetKey(KeyCode.K))
-            {
-                Attack();
-            }
-            if(Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.Space))
+            else
             {
                 statePlayer.state = State.StatePlayer.Idle;
             }
         }
-        else if (Input.touchCount >=1)
-        {
-            if(joystick.joystickVec.y != 0)
-            {
-                transform.Translate(Vector3.up * Time.deltaTime * statePlayer.velocity);
-                
-            }
-                Debug.Log("Process");
-            if (joystick.joystickVec.x > -0.5f && joystick.joystickVec.x < 0.5f && joystick.joystickVec.y > 0 && joystick.joystickVec.y <= 1)
-            {
-                transform.Translate(Vector3.up * Time.deltaTime * statePlayer.velocity);
-                
-                //MoveUp();
-            }
-            if (joystick.joystickVec.x > -0.5f && joystick.joystickVec.x < 0.5f && joystick.joystickVec.y >= -1 && joystick.joystickVec.y < 0)
-            {
-                transform.Translate(Vector3.down * Time.deltaTime * statePlayer.velocity);
-                
-                //MoveUp(false);
-            }
-            Debug.Log("Joystick X:" + joystick.joystickVec.x + " y: " + joystick.joystickVec.y);
-
-
-
-        }
-        else
-        {
-            statePlayer.state = State.StatePlayer.Idle;
-        }
+       
         
 
     } 

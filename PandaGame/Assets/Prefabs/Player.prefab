@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: 4
+  isProcessing: 0
   animator: {fileID: 8751323359847690870}
 --- !u!114 &4697670316310015902
 MonoBehaviour:
@@ -147,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d907e183a1fd264685871b4ddeb1a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listPositionToJump: []
+  statePlayer: {fileID: 9149346131432176309}
 --- !u!50 &8953526324305240555
 Rigidbody2D:
   serializedVersion: 4
