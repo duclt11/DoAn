@@ -8,7 +8,7 @@ public class EnemyRunning : MonoBehaviour
     public float speed;
     private Rigidbody2D rb;
     private Vector2 screenBounds;
-
+    public bool isDead;
 
     // Use this for initialization
     void Start()

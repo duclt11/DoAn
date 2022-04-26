@@ -20,9 +20,10 @@ public class Attack : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            if (statePlayer.state != State.StatePlayer.Attack)
+            if (statePlayer.state != State.StatePlayer.Attack && !collision.GetComponent<EnemyRunning>().isDead)
             {
                 Debug.Log("Die");
+                UnityEditor.EditorApplication.isPlaying = false;
             }
             else
             {
@@ -32,11 +33,11 @@ public class Attack : MonoBehaviour
                 }
                 else
                     collision.transform.position = new Vector3(collision.transform.position.x + collision.transform.position.x / 10, collision.transform.position.y, collision.transform.position.z);
-
+                collision.GetComponent<EnemyRunning>().isDead = true;
                 collision.GetComponent<Rigidbody2D>().gravityScale = 2.0f;
             }
         }
-        
+       
         
     }
 }
